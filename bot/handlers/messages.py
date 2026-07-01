@@ -4,7 +4,7 @@ from aiogram.types import Message
 from bot.config import Settings
 from bot.services.afk_state import AfkState
 from bot.services.keyboards import message_actions_keyboard
-from bot.services.status_text import MESSAGE_RECEIVED, owner_status_label
+from bot.services.status_text import message_received, owner_status_label
 from bot.services.storage import Storage
 from bot.utils.time import format_time
 
@@ -69,4 +69,4 @@ async def handle_incoming_message(
         reply_markup=message_actions_keyboard(message_id),
     )
 
-    await message.answer(MESSAGE_RECEIVED)
+    await message.answer(message_received(message_id))

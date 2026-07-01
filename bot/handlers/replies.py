@@ -6,6 +6,7 @@ from aiogram.types import CallbackQuery, Message
 
 from bot.config import Settings
 from bot.services.inbox import user_label
+from bot.services.status_text import owner_reply_prompt, owner_reply_sent, user_reply_text
 from bot.services.storage import Storage
 
 router = Router()
@@ -48,8 +49,10 @@ async def start_reply(
 
     label = user_label(stored.username, stored.user_id)
     if callback.message:
-        await callback.message.answer(f"Напишите ответ для {label}:")
-    await callback.answer()
+        await callback.message.answer(
+            owner_reply_prompt(message_id, label, stored.text),
+        )
+    await callback.answer(f"Вопрос #{message_id}")
 
 
 @router.message(StateFilter(ReplyState.waiting_text))
@@ -82,7 +85,11 @@ async def send_reply(
         await message.answer("Сообщение уже обработано.")
         return
 
-    await bot.send_message(chat_id=int(user_id), text=message.text)
+    label = user_label(stored.username, stored.user_id)
+    await bot.send_message(
+        chat_id=int(user_id),
+        text=user_reply_text(int(message_id), message.text),
+    )
     storage.mark_replied(int(message_id))
     await state.clear()
-    await message.answer(f"Ответ отправлен пользователю #{message_id}.")
+    await message.answer(owner_reply_sent(int(message_id), label))
