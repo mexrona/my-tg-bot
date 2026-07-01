@@ -88,7 +88,7 @@ async def send_reply(
     label = user_label(stored.username, stored.user_id)
     await bot.send_message(
         chat_id=int(user_id),
-        text=user_reply_text(int(message_id), message.text),
+        text=user_reply_text(int(message_id), stored.text, message.text),
     )
     storage.mark_replied(int(message_id))
     await state.clear()

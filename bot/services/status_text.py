@@ -26,8 +26,12 @@ def owner_reply_prompt(message_id: int, user_label: str, question_text: str) -> 
     )
 
 
-def user_reply_text(message_id: int, answer_text: str) -> str:
-    return f"Ответ на ваш вопрос #{message_id}:\n\n{answer_text}"
+def user_reply_text(message_id: int, question_text: str, answer_text: str) -> str:
+    return (
+        f"Ответ на ваш вопрос #{message_id}:\n"
+        f"{question_text.strip()}\n\n"
+        f"{answer_text.strip()}"
+    )
 
 
 def owner_reply_sent(message_id: int, user_label: str) -> str:
